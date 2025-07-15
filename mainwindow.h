@@ -2,43 +2,24 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QWidget>
-#include <QMouseEvent>
 #include <QVector>
-
-QT_BEGIN_NAMESPACE
-namespace Ui {
-class MainWindow;
-}
-QT_END_NAMESPACE
-// координаты 
-struct Point 
-{
-    int x;
-    int y;
-    
-};
+#include <QPointF>
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-
 public:
-    MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
-    
+    explicit MainWindow(QWidget *parent = nullptr);
+
 protected:
+    void paintEvent(QPaintEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
 
 private:
-    QVector<Point> contourPoints;
-    bool closed = false;
-    int gridStep = 50;
-    QPoint origin = QPoint(400,400);
-    Point screenToLogical(const QPoint &pos) const;
-    
-    
-    
-    Ui::MainWindow *ui;
+    QVector<QPointF> points; // вершины полилинии
+    bool closed = false;     // полилиния замкнута
+    QPointF mousePos;        // текущая позиция мыши
 };
+
 #endif // MAINWINDOW_H
